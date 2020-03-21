@@ -1,24 +1,22 @@
-# covid19
+## Vue Covid-19
 
-## Project setup
-```
-npm install
-```
+This repository contains simple data monitoring for Covid-19 using vue.js
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+- [Demo](https://react-covid-19.now.sh)
 
-### Compiles and minifies for production
-```
-npm run build
-```
+**Feature Include**
 
-### Lints and fixes files
-```
-npm run lint
-```
+- Global Stat
+- Searching country stat
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Instalation
+
+- `git clone https://github.com/princerafid01/covid19.git
+- `cd covid19`
+- `npm install`
+- `npm start`
+- Visit http://localhost:8080
+
+## Data Source
+
+Data source from [https://covid19.mathdro.id](https://github.com/mathdroid/covid-19-api) API
