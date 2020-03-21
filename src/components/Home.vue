@@ -129,6 +129,7 @@ export default {
     loading: false,
     globalLoading: false,
     options: [],
+    api_key: "69147e9b0fa48fea1bcd1a45d2aa0664168d849ba7a6c5d6150c4f81", // free account
     selectedCountry: {
       value: "",
       text: ""
@@ -149,9 +150,11 @@ export default {
   }),
   methods: {
     async locatedCountry() {
-      let { data } = await axios.get("http://ip-api.com/json");
-      this.selectedCountry.value = data.countryCode;
-      this.selectedCountry.text = data.country;
+      let { data } = await axios.get(
+        `https://api.ipdata.co/?api-key=${this.api_key}`
+      );
+      this.selectedCountry.value = data.country_code;
+      this.selectedCountry.text = data.country_name;
       this.changeCountry();
     },
     async getRootData() {
