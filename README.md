@@ -2,7 +2,7 @@
 
 This repository contains simple data monitoring for Covid-19 using vue.js
 
-- [Demo](https://react-covid-19.now.sh)
+- [Demo](https://covid-19-stat.now.sh)
 
 **Feature Include**
 
