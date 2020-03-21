@@ -11,6 +11,17 @@
             href="https://github.com/mathdroid/covid-19-api"
             target="_blank"
           >Muhammad Mustadi's</a> API
+          <br />Designed by
+          <a
+            class="tiya"
+            href="https://github.com/alankilalank"
+            target="_blank"
+          >Alank Ilalank</a>. Developed by
+          <a
+            class="tiya"
+            href="https://github.com/princerafid01"
+            target="_blank"
+          >Mahmud Rafid</a>.
         </p>
       </v-col>
       <v-spacer />
@@ -109,7 +120,7 @@ import countries from "./countries.json";
 import { ModelSelect } from "vue-search-select";
 
 export default {
-  name: "HelloWorld",
+  name: "Home",
   components: { Logo, ModelSelect },
 
   data: () => ({
