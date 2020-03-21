@@ -11,7 +11,7 @@ This repository contains simple data monitoring for Covid-19 using vue.js
 
 ## Instalation
 
-- `git clone https://github.com/princerafid01/covid19.git
+- `git clone https://github.com/princerafid01/covid19.git`
 - `cd covid19`
 - `npm install`
 - `npm start`
