@@ -204,14 +204,14 @@ export default {
           this.countriesUpdate.recovered = 0;
           this.countriesUpdate.lastUpdate = "";
         });
-      const yesterday = moment()
-        .subtract(1, "days")
-        .startOf("day")
-        .format("M-D-YYYY");
-      const beforeYesterday = moment()
-        .subtract(2, "days")
-        .startOf("day")
-        .format("M-D-YYYY");
+      // const yesterday = moment()
+      //   .subtract(1, "days")
+      //   .startOf("day")
+      //   .format("M-D-YYYY");
+      // const beforeYesterday = moment()
+      //   .subtract(2, "days")
+      //   .startOf("day")
+      //   .format("M-D-YYYY");
       const yesterdayResponse = await axios.get(
         `${this.baseEndpoint}/daily/3-21-2020`
       );
