@@ -1,4 +1,4 @@
-<template>
+  <template>
   <v-container>
     <v-row class="text-center" align="center" justify="center">
       <v-col cols="12">
@@ -11,50 +11,10 @@
             href="https://github.com/mathdroid/covid-19-api"
             target="_blank"
           >Muhammad Mustadi's</a> API
-          <br />Designed by
-          <a
-            class="tiya"
-            href="https://github.com/alankilalank"
-            target="_blank"
-          >Alank Ilalank</a>. Developed by
-          <a
-            class="tiya"
-            href="https://github.com/princerafid01"
-            target="_blank"
-          >Mahmud Rafid</a>.
         </p>
       </v-col>
       <v-spacer />
-      <v-col cols="12">
-        <h1 style="color:rgb(33, 43, 54)">Global Cases</h1>
-        <p class="tiya">Last Updated: {{ global.lastUpdate }}</p>
-      </v-col>
-      <v-col cols="12" md="3">
-        <v-card class="mx-auto pt-3 pb-3" shaped :loading="globalLoading">
-          <v-card-text class="white">
-            <p class="display-2 orange--text">{{ global.confirmed | putComma }}</p>
-            <h2>Confirmed</h2>
-          </v-card-text>
-        </v-card>
-      </v-col>
-      <v-col cols="12" md="3">
-        <v-card class="mx-auto pt-3 pb-3" shaped :loading="globalLoading">
-          <v-card-text class="white">
-            <p class="display-2" style="color:rgb(236, 49, 75)">{{ global.deaths | putComma }}</p>
-            <h2>Death</h2>
-          </v-card-text>
-        </v-card>
-      </v-col>
-      <v-col cols="12" md="3">
-        <v-card class="mx-auto pt-3 pb-3" shaped :loading="globalLoading">
-          <v-card-text class="white">
-            <p class="display-2" style="color:rgb(5, 181, 132)">{{ global.recovered | putComma }}</p>
-            <h2>Recovered</h2>
-          </v-card-text>
-        </v-card>
-      </v-col>
     </v-row>
-    <!-- Another section -->
 
     <v-row class="text-center" align="center" justify="center">
       <v-col cols="12">
@@ -82,6 +42,7 @@
         <v-card class="mx-auto pt-3 pb-3" shaped :loading="loading">
           <v-card-text class="white">
             <p class="display-2 orange--text">{{ countriesUpdate.confirmed | putComma }}</p>
+            <small class="warning--text">+{{ todayInCountries }} from past yesterday</small>
             <h2>Confirmed</h2>
           </v-card-text>
         </v-card>
@@ -93,6 +54,8 @@
               class="display-2"
               style="color:rgb(236, 49, 75)"
             >{{ countriesUpdate.deaths | putComma}}</p>
+            <small class="error--text">{{ countryDeathPercentage }}%</small>
+
             <h2>Death</h2>
           </v-card-text>
         </v-card>
@@ -104,6 +67,43 @@
               class="display-2"
               style="color:rgb(5, 181, 132)"
             >{{ countriesUpdate.recovered | putComma }}</p>
+            <small class="success--text">{{ countryRecoveredPercentage }}%</small>
+
+            <h2>Recovered</h2>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row class="text-center" align="center" justify="center">
+      <v-col cols="12">
+        <h1 style="color:rgb(33, 43, 54)">Global Cases</h1>
+        <p class="tiya">Last Updated: {{ global.lastUpdate }}</p>
+      </v-col>
+      <v-col cols="12" md="3">
+        <v-card class="mx-auto pt-3 pb-3" shaped :loading="globalLoading">
+          <v-card-text class="white">
+            <p class="display-2 orange--text">{{ global.confirmed | putComma }}</p>
+            <small class="warning--text">+{{ todayInGlobal }} from past yesterday</small>
+
+            <h2>Confirmed</h2>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="12" md="3">
+        <v-card class="mx-auto pt-3 pb-3" shaped :loading="globalLoading">
+          <v-card-text class="white">
+            <p class="display-2" style="color:rgb(236, 49, 75)">{{ global.deaths | putComma }}</p>
+            <small class="error--text">{{ globalDeathPercentage }}%</small>
+            <h2>Death</h2>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="12" md="3">
+        <v-card class="mx-auto pt-3 pb-3" shaped :loading="globalLoading">
+          <v-card-text class="white">
+            <p class="display-2" style="color:rgb(5, 181, 132)">{{ global.recovered | putComma }}</p>
+            <small class="success--text">{{ globalRecoveredPercentage }}%</small>
+
             <h2>Recovered</h2>
           </v-card-text>
         </v-card>
@@ -112,7 +112,7 @@
   </v-container>
 </template>
 
-<script>
+  <script>
 import Logo from "./SvgLogo";
 import axios from "axios";
 import moment from "moment";
@@ -125,6 +125,12 @@ export default {
 
   data: () => ({
     data: "",
+    todayInCountries: 0,
+    countryDeathPercentage: 0,
+    countryRecoveredPercentage: 0,
+    todayInGlobal: 0,
+    globalDeathPercentage: 0,
+    globalRecoveredPercentage: 0,
     countryError: false,
     loading: false,
     globalLoading: false,
@@ -161,7 +167,7 @@ export default {
       this.globalLoading = true;
       const response = await axios.get(this.baseEndpoint);
       this.data = response.data;
-      console.log(this.data);
+      // console.log(this.data);
       this.global.confirmed = this.data.confirmed.value;
       this.global.deaths = this.data.deaths.value;
       this.global.recovered = this.data.recovered.value;
@@ -176,6 +182,13 @@ export default {
       }
     },
     async changeCountry() {
+      this.countryRecoveredPercentage = 0;
+      this.countryDeathPercentage = 0;
+      this.todayInCountries = 0;
+      for (let [key, value] of Object.entries(this.countriesUpdate)) {
+        this.countriesUpdate[key] = 0;
+        console.log(value);
+      }
       this.countryError = false;
       this.loading = true;
       const { data } = await axios
@@ -191,12 +204,77 @@ export default {
           this.countriesUpdate.recovered = 0;
           this.countriesUpdate.lastUpdate = "";
         });
+      const yesterday = moment()
+        .subtract(1, "days")
+        .startOf("day")
+        .format("M-D-YYYY");
+      const beforeYesterday = moment()
+        .subtract(2, "days")
+        .startOf("day")
+        .format("M-D-YYYY");
+      const yesterdayResponse = await axios.get(
+        `${this.baseEndpoint}/daily/${yesterday}`
+      );
+      const beforeYesterdayResponse = await axios.get(
+        `${this.baseEndpoint}/daily/${beforeYesterday}`
+      );
+      let yesterdayConfirm = 0;
+      let beforeYesterdayConfirm = 0;
+
+      let globalYesterdayConfirm = 0;
+      let globalBeforeYesterdayConfirm = 0;
+      yesterdayResponse.data.map(data => {
+        globalYesterdayConfirm += Number(data.confirmed);
+
+        if (data.countryRegion == this.selectedCountry.text) {
+          yesterdayConfirm += Number(data.confirmed);
+        }
+      });
+      beforeYesterdayResponse.data.map(data => {
+        globalBeforeYesterdayConfirm += Number(data.confirmed);
+
+        if (data.countryRegion == this.selectedCountry.text) {
+          beforeYesterdayConfirm += Number(data.confirmed);
+        }
+      });
+
       this.loading = false;
       this.countriesUpdate.confirmed = data.confirmed.value;
       this.countriesUpdate.deaths = data.deaths.value;
       this.countriesUpdate.recovered = data.recovered.value;
       this.countriesUpdate.lastUpdate = moment(data.lastUpdate).format(
         "MMMM Do YYYY, h:mm:ss a"
+      );
+      // count how many was affected past yesterday globally
+      this.todayInGlobal =
+        globalYesterdayConfirm -
+        globalBeforeYesterdayConfirm +
+        (this.global.confirmed - globalYesterdayConfirm);
+
+      // count how many was affected past yesterday in selected country
+      this.todayInCountries =
+        yesterdayConfirm -
+        beforeYesterdayConfirm +
+        (this.countriesUpdate.confirmed - yesterdayConfirm);
+
+      // counts the percentage of recovered rate globally
+      this.globalRecoveredPercentage = Math.round(
+        (this.global.recovered / this.global.confirmed) * 100
+      );
+
+      // counts the percentage of recovered rate of selected country
+      this.countryRecoveredPercentage = Math.round(
+        (this.countriesUpdate.recovered / this.countriesUpdate.confirmed) * 100
+      );
+
+      // counts the perentage of death rate globally
+      this.globalDeathPercentage = Math.round(
+        (this.global.deaths / this.global.confirmed) * 100
+      );
+
+      // counts the perentage of death rate of selected country
+      this.countryDeathPercentage = Math.round(
+        (this.countriesUpdate.deaths / this.countriesUpdate.confirmed) * 100
       );
     }
   },
@@ -212,7 +290,7 @@ export default {
   }
 };
 </script>
-<style  scoped>
+  <style  scoped>
 .tiya {
   text-decoration: none;
   color: rgb(76, 175, 80) !important;
@@ -231,5 +309,8 @@ h4,
 h5,
 h6 {
   font-weight: 500;
+}
+small {
+  font-size: 14px;
 }
 </style>
