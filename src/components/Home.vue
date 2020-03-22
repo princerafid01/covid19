@@ -213,10 +213,10 @@ export default {
         .startOf("day")
         .format("M-D-YYYY");
       const yesterdayResponse = await axios.get(
-        `${this.baseEndpoint}/daily/${yesterday}`
+        `${this.baseEndpoint}/daily/3-21-2020`
       );
       const beforeYesterdayResponse = await axios.get(
-        `${this.baseEndpoint}/daily/${beforeYesterday}`
+        `${this.baseEndpoint}/daily/3-20-2020`
       );
       let yesterdayConfirm = 0;
       let beforeYesterdayConfirm = 0;
