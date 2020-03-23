@@ -185,9 +185,8 @@ export default {
       this.countryRecoveredPercentage = 0;
       this.countryDeathPercentage = 0;
       this.todayInCountries = 0;
-      for (let [key, value] of Object.entries(this.countriesUpdate)) {
+      for (let [key] of Object.entries(this.countriesUpdate)) {
         this.countriesUpdate[key] = 0;
-        console.log(value);
       }
       this.countryError = false;
       this.loading = true;
@@ -204,20 +203,42 @@ export default {
           this.countriesUpdate.recovered = 0;
           this.countriesUpdate.lastUpdate = "";
         });
-      // const yesterday = moment()
-      //   .subtract(1, "days")
-      //   .startOf("day")
-      //   .format("M-D-YYYY");
-      // const beforeYesterday = moment()
-      //   .subtract(2, "days")
-      //   .startOf("day")
-      //   .format("M-D-YYYY");
-      const yesterdayResponse = await axios.get(
-        `${this.baseEndpoint}/daily/3-21-2020`
-      );
-      const beforeYesterdayResponse = await axios.get(
-        `${this.baseEndpoint}/daily/3-20-2020`
-      );
+      const yesterday = moment()
+        .subtract(1, "days")
+        .startOf("day")
+        .format("M-D-YYYY");
+      const beforeYesterday = moment()
+        .subtract(2, "days")
+        .startOf("day")
+        .format("M-D-YYYY");
+      let yesterdayResponse;
+      let beforeYesterdayResponse;
+
+      try {
+        yesterdayResponse = await axios.get(
+          `${this.baseEndpoint}/daily/${yesterday}`
+        );
+        beforeYesterdayResponse = await axios.get(
+          `${this.baseEndpoint}/daily/${beforeYesterday}`
+        );
+      } catch (error) {
+        const tempYesterday = moment()
+          .subtract(2, "days")
+          .startOf("day")
+          .format("M-D-YYYY");
+        yesterdayResponse = await axios.get(
+          `${this.baseEndpoint}/daily/${tempYesterday}`
+        );
+
+        const tempBeforeYesterday = moment()
+          .subtract(3, "days")
+          .startOf("day")
+          .format("M-D-YYYY");
+        beforeYesterdayResponse = await axios.get(
+          `${this.baseEndpoint}/daily/${tempBeforeYesterday}`
+        );
+      }
+
       let yesterdayConfirm = 0;
       let beforeYesterdayConfirm = 0;
 
